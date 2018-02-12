@@ -14,22 +14,20 @@ public class BlockModel {
 	
 	//Check that there are no duplicate numbers
 	public boolean checkDuplicates() {
-		boolean[][] vals = new boolean[3][3];
+		boolean[] vals = new boolean[9];
 		for(int i = 0; i < 3; i++) {
-			for (int k = 0; k < 3; k++) {
-				
-				int num = this.getCellNum(i,k);
-				if (num != 0) {
-					num -= 1;
-					if (!vals[num / 3][num % 3]) {
-						//The number hasn't already been found in the row
-						vals[num / 3][num % 3] = true;
-					} else {
+			for(int k = 0; k < 3; k++) {
+				int num = this.getCellNum(i, k);
+				if(num != 0) {
+					if(!vals[num-1]) {
+						//The number hasn't already been found
+						vals[num-1] = true;
+					}
+					else {
 						//A duplicate number was found
 						return false;
-					} 
-				} 
-				
+					}
+				}
 			}
 		}
 		return true;

@@ -11,9 +11,10 @@ public class Main {
 		
 		new GridView("Test", playGrid);
 		
+		/*
 		playGrid.setCanEdit(5, 2, true);
 		playGrid.setNum(5, 2, 0);
-		/*
+		
 		playGrid.setNum(1, 3, 4);
 		playGrid.setCanEdit(1, 3, false);
 		
@@ -25,7 +26,7 @@ public class Main {
 		
 		playGrid.setNum(4, 4, 4);
 		playGrid.setCanEdit(4, 4, false);
-		*/
+		/**/
 		playGrid.printPlayGrid();
 		
 		/**/

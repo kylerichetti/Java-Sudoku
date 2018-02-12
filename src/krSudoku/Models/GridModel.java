@@ -75,10 +75,15 @@ public class GridModel {
 				//System.out.println("Col " + i + " failed");
 				break;
 			}
-			if(!this.checkBlock(i/3, i/3)) {
-				blocksFlag = false;
-				//System.out.println("Block [" + i/3 + "][" + i/3 + "] failed");
-				break;
+		}
+		
+		for(int i = 0; i < 3; i++) {
+			for(int k = 0; k < 3; k++) {
+				if(!this.checkBlock(i, k)) {
+					blocksFlag = false;
+					//System.out.println("Block [" + i/3 + "][" + i/3 + "] failed");
+					break;
+				}
 			}
 		}
 		return rowsFlag && colsFlag && blocksFlag && blanksFlag;
@@ -151,6 +156,7 @@ public class GridModel {
 	
 	}
 	private boolean autoSolve(int row, int col, int num) {
+		int startNum = 1;
 		if(this.getCanEdit(row, col)) {
 			//Can be edited, start plugging away
 			//Plug in number
@@ -187,7 +193,10 @@ public class GridModel {
 			nextRow = (row + 1) % 9;
 		}
 		//Start loop that calls self on next cell
-		for(int i = 1; i <= 9; i++) {
+		if(!this.getCanEdit(nextRow, nextCol)) {
+			startNum = 9;
+		}
+		for(int i = startNum; i <= 9; i++) {
 			if(this.autoSolve(nextRow, nextCol, i)) {
 				return true;
 			}
@@ -220,9 +229,12 @@ public class GridModel {
 	}
 	
 	public void generateTestPuzzle() {
-		Random rand = new Random(33);
+		//Seed: 564847, i < 25 is interesting to watch
+		//Seed: 31415, i < 26 is interesting, and solves
 		
-		for(int i = 0; i < 25; i++) {
+		Random rand = new Random(31415);
+		
+		for(int i = 0; i < 27; i++) {
 			int row = rand.nextInt(9);
 			int col = rand.nextInt(9);
 			int num = rand.nextInt(8) + 1;
