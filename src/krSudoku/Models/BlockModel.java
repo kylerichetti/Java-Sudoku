@@ -19,13 +19,15 @@ public class BlockModel {
 			for (int k = 0; k < 3; k++) {
 				
 				int num = this.getCellNum(i,k);
-				if (num != 0 && !vals[num/3][num%3]) {
-					//The number hasn't already been found in the row
-					vals[num/3][num%3] = true;
-				} else {
-					//A duplicate number was found
-					//or the cell was empty
-					return false;
+				if (num != 0) {
+					num -= 1;
+					if (!vals[num / 3][num % 3]) {
+						//The number hasn't already been found in the row
+						vals[num / 3][num % 3] = true;
+					} else {
+						//A duplicate number was found
+						return false;
+					} 
 				} 
 				
 			}
@@ -38,8 +40,16 @@ public class BlockModel {
 		return cells[row][col].getNum();
 	}
 	
+	public boolean getCellCanEdit(int row, int col) {
+		return cells[row][col].getCanEdit();
+	}
+	
 	public boolean setCellNum(int row, int col, int num) {
 		return cells[row][col].setNum(num);
+	}
+	
+	public void setCellCanEdit(int row, int col, boolean canEdit) {
+		cells[row][col].setCanEdit(canEdit);
 	}
 	
 	public void printBlock() {

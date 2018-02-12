@@ -21,6 +21,14 @@ public class GridModel {
 		return blocks[bRow][bCol].setCellNum(cRow, cCol, num);
 	}
 	
+	public void setCanEdit(int row, int col, boolean canEdit) {
+		int bRow = row/3;
+		int bCol = col/3;
+		int cRow = row%3;
+		int cCol = col%3;
+		blocks[bRow][bCol].setCellCanEdit(cRow, cCol, canEdit);
+	}
+	
 	public int getNum(int row, int col) {
 		int bRow = row/3;
 		int bCol = col/3;
@@ -29,29 +37,41 @@ public class GridModel {
 		return blocks[bRow][bCol].getCellNum(cRow, cCol);
 	}
 	
+	public boolean getCanEdit(int row, int col) {
+		int bRow = row/3;
+		int bCol = col/3;
+		int cRow = row%3;
+		int cCol = col%3;
+		return blocks[bRow][bCol].getCellCanEdit(cRow, cCol);
+	}
+	
 	//Checking victory conditions
-	public boolean checkSolved() {
+	public boolean checkSolved(boolean testBlanks) {
 		boolean rowsFlag = true, 
 				colsFlag = true, 
-				blocksFlag = true;
+				blocksFlag = true,
+				blanksFlag = true;
+		if(testBlanks) {
+			blanksFlag = this.checkBlanks();
+		}
 		for(int i = 0; i < 9; i++) {
 			if(!this.checkRow(i)) {
 				rowsFlag = false;
-				System.out.println("Row " + i + " failed");
+				//System.out.println("Row " + i + " failed");
 				break;
 			}
 			if(!this.checkCol(i)) {
 				colsFlag = false;
-				System.out.println("Col " + i + " failed");
+				//System.out.println("Col " + i + " failed");
 				break;
 			}
 			if(!this.checkBlock(i/3, i%3)) {
 				blocksFlag = false;
-				System.out.println("Block [" + i/3 + "][" + i%3 + "] failed");
+				//System.out.println("Block [" + i/3 + "][" + i%3 + "] failed");
 				break;
 			}
 		}
-		return rowsFlag && colsFlag && blocksFlag;
+		return rowsFlag && colsFlag && blocksFlag && blanksFlag;
 	}
 	
 	//Check row
@@ -59,14 +79,15 @@ public class GridModel {
 		boolean[] vals = new boolean[9];
 		for(int i = 0; i < 9; i++) {
 			int num = this.getNum(row, i);
-			if(num != 0 && !vals[num-1]) {
-				//The number hasn't already been found in the row
-				vals[num-1] = true;
-			}
-			else {
-				//A duplicate number was found
-				//or the cell was empty
-				return false;
+			if(num != 0) {
+				if(!vals[num-1]) {
+					//The number hasn't already been found in the row
+					vals[num-1] = true;
+				}
+				else {
+					//A duplicate number was found
+					return false;
+				}
 			}
 		}
 		return true;
@@ -77,14 +98,15 @@ public class GridModel {
 		boolean[] vals = new boolean[9];
 		for(int i = 0; i < 9; i++) {
 			int num = this.getNum(i, col);
-			if(num != 0 && !vals[num-1]) {
-				//The number hasn't already been found in the row
-				vals[num-1] = true;
-			}
-			else {
-				//A duplicate number was found
-				//or the cell was empty
-				return false;
+			if(num != 0) {
+				if(!vals[num-1]) {
+					//The number hasn't already been found in the row
+					vals[num-1] = true;
+				}
+				else {
+					//A duplicate number was found
+					return false;
+				}
 			}
 		}
 		return true;
@@ -92,6 +114,80 @@ public class GridModel {
 	//Check block
 	private boolean checkBlock(int row, int col) {
 		return blocks[row][col].checkDuplicates();
+	}
+	
+	//Check blanks
+	private boolean checkBlanks() {
+		for(int i = 0; i < 9; i++) {
+			for(int k = 0; k < 9; k++) {
+				int num = this.getNum(i, k);
+				if(num == 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	//Method to generate a puzzle solution
+	public boolean autoSolve() {
+		for(int i = 1; i <= 9; i++) {
+			if(autoSolve(0,0,i)) {
+				//Solved
+				return true;
+			}
+		}
+		return false;
+	
+	}
+	private boolean autoSolve(int row, int col, int num) {
+		if(this.getCanEdit(row, col)) {
+			//Can be edited, start plugging away
+			//Plug in number
+			this.setNum(row, col, num);
+			//Check if current number is invalid
+			//Check if row is valid
+			if(!this.checkRow(row)) {
+				return false;
+			}
+			//Check if column is valid
+			if(!this.checkCol(row)) {
+				return false;
+			}
+			//Check if block is valid
+			if(!this.checkBlock(row/3, col%3)) {
+				return false;
+			}
+		}
+		//If it can't be edited or the current num
+		//is valid, jump to the next cell
+		int nextRow, nextCol;
+		if(row == 8 && col == 8) {
+			//Last cell
+			//Check if solved
+			return this.checkSolved(true);
+			
+		}
+		else if(row == 8) {
+			if(num == 4 || num == 9) {
+				this.printPlayGrid();
+			}
+			nextCol = col + 1;
+			nextRow = (row + 1) % 9;
+		}
+		else {
+			nextCol = col;
+			nextRow = (row + 1) % 9;
+		}
+		//Start loop that calls self on next cell
+		for(int i = 1; i <= 9; i++) {
+			if(this.autoSolve(nextRow, nextCol, i)) {
+				return true;
+			}
+		}
+		
+		this.setNum(nextRow, nextCol, 0);
+		return false;
 	}
 	
 	//Print to the console for debugging
