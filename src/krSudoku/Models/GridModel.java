@@ -1,5 +1,7 @@
 package krSudoku.Models;
 
+import java.util.Random;
+
 public class GridModel {
 	private BlockModel[][] blocks;
 	
@@ -45,6 +47,14 @@ public class GridModel {
 		return blocks[bRow][bCol].getCellCanEdit(cRow, cCol);
 	}
 	
+	public CellModel getCell(int row, int col) {
+		int bRow = row/3;
+		int bCol = col/3;
+		int cRow = row%3;
+		int cCol = col%3;
+		return blocks[bRow][bCol].getCell(cRow, cCol);
+	}
+	
 	//Checking victory conditions
 	public boolean checkSolved(boolean testBlanks) {
 		boolean rowsFlag = true, 
@@ -65,9 +75,9 @@ public class GridModel {
 				//System.out.println("Col " + i + " failed");
 				break;
 			}
-			if(!this.checkBlock(i/3, i%3)) {
+			if(!this.checkBlock(i/3, i/3)) {
 				blocksFlag = false;
-				//System.out.println("Block [" + i/3 + "][" + i%3 + "] failed");
+				//System.out.println("Block [" + i/3 + "][" + i/3 + "] failed");
 				break;
 			}
 		}
@@ -151,11 +161,11 @@ public class GridModel {
 				return false;
 			}
 			//Check if column is valid
-			if(!this.checkCol(row)) {
+			if(!this.checkCol(col)) {
 				return false;
 			}
 			//Check if block is valid
-			if(!this.checkBlock(row/3, col%3)) {
+			if(!this.checkBlock(row/3, col/3)) {
 				return false;
 			}
 		}
@@ -169,11 +179,8 @@ public class GridModel {
 			
 		}
 		else if(row == 8) {
-			if(num == 4 || num == 9) {
-				this.printPlayGrid();
-			}
 			nextCol = col + 1;
-			nextRow = (row + 1) % 9;
+			nextRow = 0;
 		}
 		else {
 			nextCol = col;
@@ -210,6 +217,31 @@ public class GridModel {
 			System.out.println("|");
 		}
 		System.out.println("-------------------");
+	}
+	
+	public void generateTestPuzzle() {
+		Random rand = new Random(33);
+		
+		for(int i = 0; i < 25; i++) {
+			int row = rand.nextInt(9);
+			int col = rand.nextInt(9);
+			int num = rand.nextInt(8) + 1;
+			
+			if(this.getCanEdit(row, col)) {
+				this.setNum(row, col, num);
+				this.setCanEdit(row, col, false);
+				
+				//Check valid
+				if(!this.checkSolved(false)) {
+					this.setCanEdit(row, col, true);
+					this.setNum(row, col, 0);
+					i--;
+				}
+			}
+			else {
+				i -= 1;
+			}
+		}
 	}
 }
 

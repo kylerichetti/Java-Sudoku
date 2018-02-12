@@ -1,58 +1,33 @@
 package krSudoku;
 
 import krSudoku.Models.GridModel;
-import java.util.Random;
+import krSudoku.Views.GridView;
 
 public class Main {
 	public static void main(String args[]) {
 		GridModel playGrid = new GridModel();
 		
-		Random rand = new Random(3005003);
+		playGrid.generateTestPuzzle();
 		
-		for(int i = 0; i < 62; i++) {
-			int row = rand.nextInt(9);
-			int col = rand.nextInt(9);
-			int num = rand.nextInt(8) + 1;
-			
-			if(playGrid.getCanEdit(row, col)) {
-				playGrid.setNum(row, col, num);
-				playGrid.setCanEdit(row, col, false);
-				
-				//Check valid
-				if(!playGrid.checkSolved(false)) {
-					playGrid.setCanEdit(row, col, true);
-					playGrid.setNum(row, col, 0);
-					i--;
-					//System.out.println("Invalid");
-				}
-			}
-			else {
-				i -= 1;
-				//System.out.println("Dup");
-			}
-		}
+		new GridView("Test", playGrid);
 		
-		int tally = 0;
-		for(int i = 0; i < 9; i++) {
-			for(int k = 0; k < 9; k++) {
-				if(playGrid.getNum(i, k) != 0) {
-					tally += 1;
-				}
-			}
-		}
+		playGrid.setCanEdit(5, 2, true);
+		playGrid.setNum(5, 2, 0);
+		/*
+		playGrid.setNum(1, 3, 4);
+		playGrid.setCanEdit(1, 3, false);
 		
-		/*playGrid.setNum(1, 1, 3);
-		playGrid.setNum(4, 5, 1);
-		playGrid.setNum(7, 2, 9);
+		playGrid.setNum(2, 6, 4);
+		playGrid.setCanEdit(2, 6, false);
 		
-		playGrid.setCanEdit(1, 1, false);
-		playGrid.setCanEdit(4, 5, false);
-		playGrid.setCanEdit(7, 2, false);*/
+		playGrid.setNum(3, 1, 4);
+		playGrid.setCanEdit(3, 1, false);
 		
+		playGrid.setNum(4, 4, 4);
+		playGrid.setCanEdit(4, 4, false);
+		*/
 		playGrid.printPlayGrid();
-		System.out.println(tally);
-		//System.out.println(playGrid.checkSolved(false));
-
+		
 		/**/
 		if(playGrid.autoSolve()) {
 			System.out.println("Solved!");

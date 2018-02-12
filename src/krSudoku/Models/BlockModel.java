@@ -52,6 +52,10 @@ public class BlockModel {
 		cells[row][col].setCanEdit(canEdit);
 	}
 	
+	public CellModel getCell(int row, int col) {
+		return cells[row][col];
+	}
+	
 	public void printBlock() {
 		for(int i = 0; i < 3; i++) {
 			for(int k = 0; k < 3; k++) {

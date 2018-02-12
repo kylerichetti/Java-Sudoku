@@ -1,6 +1,8 @@
 package krSudoku.Models;
 
-public class CellModel {
+import java.util.Observable;
+
+public class CellModel extends Observable{
 	private int num;
 	private boolean canEdit;
 	
@@ -27,9 +29,13 @@ public class CellModel {
 		}
 		if(num >= 0 && num <=9) {
 			this.num = num;
+			setChanged();
+			notifyObservers();
 			return true;
 		}
 		this.num = 0;
+		setChanged();
+		notifyObservers();
 		return false;
 	}
 }
