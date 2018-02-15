@@ -20,7 +20,7 @@ public class CellView extends JPanel{
 	
 	public void init() {
 		this.setLayout(new FlowLayout());
-		this.setSize(150,700);
+		this.setSize(75,75);
 		this.setBackground(Color.CYAN);
 		
 		String cellValue;
@@ -31,7 +31,7 @@ public class CellView extends JPanel{
 			cellValue = " ";
 		}
 		value = new JLabel(cellValue);
-		value.setFont(new Font("Serif", Font.BOLD, 20));
+		value.setFont(new Font("Serif", Font.BOLD, 22));
 		this.add(value);
 	}
 	

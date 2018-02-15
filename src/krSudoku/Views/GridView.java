@@ -10,20 +10,20 @@ public class GridView extends JFrame {
 	private GridModel gameData;
 	private JPanel panel;
 	private GridBagLayout layout;
-	private CellView[][] cells;
+	private BlockView[][] blocks;
 	
 	public GridView(String name, GridModel gameData) {
 		super(name);
 		
 		this.gameData = gameData;
-		this.cells = new CellView[9][9];
+		this.blocks = new BlockView[3][3];
 		
 		this.setResizable(false);
 		this.prepareGui();
 	}
 	
 	private void prepareGui() {
-		this.setSize(700,500);
+		this.setSize(930,930);
 		this.setLayout(new FlowLayout());
 		
 		this.addWindowListener(new WindowAdapter() {
@@ -33,21 +33,23 @@ public class GridView extends JFrame {
 		});
 		
 		panel = new JPanel();
+		panel.setBackground(Color.DARK_GRAY);
 		layout = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
 		panel.setLayout(layout);
 		gbc.fill = GridBagConstraints.BOTH;
-		//gbc.ipady = 20;
 		gbc.insets = new Insets(2,2,2,2);
+		gbc.weightx = 0.5;
+		gbc.weighty = 0.5;
 		
-		for(int i = 0; i < 9; i++) {
-			for(int k = 0; k < 9; k++) {
+		for(int i = 0; i < 3; i++) {
+			for(int k = 0; k < 3; k++) {
 				gbc.gridx = k;
 				gbc.gridy = i;
 				
-				cells[i][k] = new CellView(gameData.getCell(i, k));
+				blocks[i][k] = new BlockView(gameData.getBlock(i, k));
 				
-				panel.add(cells[i][k], gbc);
+				panel.add(blocks[i][k], gbc);
 			}
 		}
 		

@@ -55,6 +55,10 @@ public class GridModel {
 		return blocks[bRow][bCol].getCell(cRow, cCol);
 	}
 	
+	public BlockModel getBlock(int row, int col) {
+		return blocks[row][col];
+	}
+	
 	//Checking victory conditions
 	public boolean checkSolved(boolean testBlanks) {
 		boolean rowsFlag = true, 
@@ -152,6 +156,7 @@ public class GridModel {
 				return true;
 			}
 		}
+		this.setNum(0, 0, 0);
 		return false;
 	
 	}
@@ -234,7 +239,7 @@ public class GridModel {
 		
 		Random rand = new Random(31415);
 		
-		for(int i = 0; i < 27; i++) {
+		for(int i = 0; i < 25; i++) {
 			int row = rand.nextInt(9);
 			int col = rand.nextInt(9);
 			int num = rand.nextInt(8) + 1;
